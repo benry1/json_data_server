@@ -29,16 +29,21 @@ async function main(galaBalance) {
     console.log("SGB Balance", witterBalance, witterBalanceSgb, witterBalanceWsgb)
 
     //Get Witter reward
-    var witterReward = Web3.utils.fromWei((await FtsoRewardManagerContract.methods.getStateOfRewards(witterAddress, currentRewardEpoch - 1).call())["_rewardAmounts"][0])
+    var witterRewardArray = (await FtsoRewardManagerContract.methods.getStateOfRewards(witterAddress, currentRewardEpoch - 1).call())["_rewardAmounts"]
+    var witterReward = 0;
+    for (var i = 0; i < witterRewardArray.length; i++) {
+        witterReward += parseFloat(Web3.utils.fromWei(witterRewardArray[i]))
+    }
+    console.log("Total reward: ", witterReward)
 
     //Get FTSO Reward
     var witterFTSOReward = Web3.utils.fromWei((await FtsoRewardManagerContract.methods.getStateOfRewards(ftsoAddress, currentRewardEpoch - 1).call())["_rewardAmounts"][0])
     console.log(currentRewardEpoch, witterBalance, witterReward, witterFTSOReward)
 
     //Get SGB Price
-    var sgbPriceReturn = []
+    var sgbPriceReturn = [{}] //Adding the empty object just bypasses the fetch. Throwing errors on me :(
     while (sgbPriceReturn.length == 0){
-        var resp = await fetch("https://www.bitrue.com/api/v1/ticker/24hr?symbol=SGBUSDT")
+        var resp = await fetch("https://www.bitrue.com/api/v1/ticker/24hr?symbol=SGBUSDT").catch(error => console.log(error))
         sgbPriceReturn = await resp.json()               
         sleep(100)
     }
@@ -46,9 +51,9 @@ async function main(galaBalance) {
     console.log(sgbPrice)
 
 
-    galaPriceReturn = []
+    galaPriceReturn = [{}]
     while (galaPriceReturn.length == 0) {
-        var resp = await fetch("https://www.bitrue.com/api/v1/ticker/24hr?symbol=GALAUSDT")
+        var resp = await fetch("https://www.bitrue.com/api/v1/ticker/24hr?symbol=GALAUSDT").catch(error => console.log(error))
         galaPriceReturn = await resp.json()
         sleep(100)
     }

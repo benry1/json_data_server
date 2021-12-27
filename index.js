@@ -12,14 +12,18 @@ app.use(cors())
 app.options('*', cors())
 
 app.get('/getBalanceData', (req, resp) => {
+    db = new JSONdb(process.env.db)
     resp.send(db.JSON())
 })
 
 app.post('/setBalanceData', (req, resp) => {
     console.log(req.body)
     var balance = req.body["galaBalance"]
-    var msg = getBalance.main(balance)
-    resp.send(msg)
+    var msg = getBalance.main(balance).then(complete => {
+        resp.send(complete)
+    }).catch(error =>
+        resp.send(error)
+        )
 })
 
 app.listen(port, () => {
