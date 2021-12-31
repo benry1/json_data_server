@@ -4,8 +4,14 @@ const JSONdb = require('simple-json-db');
 const cors = require('cors')
 const getBalance = require("./assets/js/queryBalances")
 const path = require('path');
+const https = require('https');
+const http  = require('http');
+const fs = require('fs');
 const app = express()
 const port = 3000
+
+var pkey = fs.readFileSync('./selfsigned.key', 'utf8');
+var pcrt = fs.readFileSync('./selfsigned.crt', 'utf8');
 
 var db = new JSONdb(process.env.db);
 app.use(express.json());
@@ -32,6 +38,12 @@ app.get('/', (req, resp) => {
     resp.sendFile(path.join(__dirname, "/balances.html"))
 })
 
+var secureServer = https.createServer({key: pkey, cert: pcrt}, app)
+
+secureServer.listen(port + 1, () => {
+    console.log('Listening on localhost:', port + 1)
+})
+
 app.listen(port, () => {
-    console.log('Listening on localhost:', port)
+	console.log("Http is listening too!", port)
 })

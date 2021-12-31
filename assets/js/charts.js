@@ -10,7 +10,7 @@ var galaPrice = Array()
 
 //Returns string of 
 async function fetchBalances() {
-    fetch("http://localhost:3000/getBalanceData").then(resp => buildValues(resp))  
+    fetch("http://3.144.179.213:3000/getBalanceData").then(resp => buildValues(resp))  
 }
 
 async function buildValues(resp ) {
