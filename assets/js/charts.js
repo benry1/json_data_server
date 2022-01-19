@@ -6,14 +6,16 @@ var rewardEpochs = Array()
 var sgbPriceData = Array()
 var galaBalance = Array()
 var galaPrice = Array()
+var solanaBalance = Array()
+var solanaPrice = Array()
 
 
 //Returns string of 
-async function fetchBalances() {
-    fetch("http://3.144.179.213:3000/getBalanceData").then(resp => buildValues(resp))  
+async function fetchBalanceHistory() {
+    fetch("http://witterbalances.ignorelist.com/getBalanceHistory").then(resp => buildAllValues(resp))  
 }
 
-async function buildValues(resp ) {
+async function buildAllValues(resp ) {
     var parsed = await resp.json()
     console.log(parsed)
     for (var key in parsed) {
@@ -27,6 +29,8 @@ async function buildValues(resp ) {
             sgbPriceData.push(record["SGBPrice"])
             galaBalance.push(record["galaBalance"])
             galaPrice.push(record["galaPrice"])
+            solanaBalance.push(record["solanaBalance"])
+            solanaPrice.push(record["solanaPrice"])
         }
     }
     renderCharts()
@@ -97,5 +101,5 @@ function renderCharts() {
       );
 }
 
-fetchBalances()
+fetchBalanceHistory()
 

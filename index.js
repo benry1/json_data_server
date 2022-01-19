@@ -19,15 +19,23 @@ app.use(cors())
 app.use(express.static(path.join(__dirname)))
 app.options('*', cors())
 
-app.get('/getBalanceData', (req, resp) => {
+app.get('/getBalanceHistory', (req, resp) => {
     db = new JSONdb(process.env.db)
     resp.send(db.JSON())
+})
+
+app.get('/getBalanceData', (req, resp) => {
+    var msg = getBalance.readCurrentBalances().then(complete => {
+        resp.send(complete)
+    }).catch(error => 
+        resp.send(error)
+    )
 })
 
 app.post('/setBalanceData', (req, resp) => {
     console.log(req.body)
     var balance = req.body["galaBalance"]
-    var msg = getBalance.main(balance).then(complete => {
+    var msg = getBalance.setBalanceData(balance).then(complete => {
         resp.send(complete)
     }).catch(error =>
         resp.send(error)
