@@ -5,7 +5,8 @@ const Web3 = require('web3')
 const Solana3 = require('@solana/web3.js')
 
 // mod.cjs
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+//const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const fetch = require('node-fetch')
 var JSONdb = require('simple-json-db')
 
 const abi = require('./abi.js')
@@ -13,15 +14,19 @@ const abi = require('./abi.js')
 //Returns a JS object with TODAY'S balances
 //Not the most recent balances in the db!
 async function readCurrentBalances() {
-
+	console.log("Hey!")
     //Songbird Tokens
-    var witterAddress = process.env.songbirdAddress
-    var rpc = new Web3(new Web3.providers.HttpProvider("http://3.132.128.10:9650/ext/bc/C/rpc"))
-    var sgbBalance = await querySongbird(rpc, witterAddress)
+    
+	var witterAddress = process.env.songbirdAddress
+    console.log(witterAddress)
+	var rpc = new Web3(new Web3.providers.HttpProvider("http://3.132.128.10:9650/ext/bc/C/rpc"))
+    console.log("Connected to RPC")
+	var sgbBalance = await querySongbird(rpc, witterAddress)
     // var exfiBalance = await queryExFi(rpc, witterAddress)
 
 
     //Get SGB Price
+    console.log("Getting first price data..")
     var sgbPrice = await queryBitrue("SGB")
     console.log(sgbPrice)
 
@@ -103,6 +108,7 @@ async function setBalanceData(galaBalance) {
 
 async function queryBitrue(symbol) {
     //Get SGB Price
+    console.log("Getting bitrue for ", symbol)
     var price = [] //Adding the empty object just bypasses the fetch. Throwing errors on me :(
     var counter = 0;
         while (price.length == 0 && counter < 10){

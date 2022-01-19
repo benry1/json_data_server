@@ -17,7 +17,7 @@ var currentSolanaPrice = 0
 var currentExfiPrice = 0
 
 async function fetchCurrentBalance() {
-    await fetch("http://localhost:3000/getBalanceData").then(resp => buildValues(resp))  
+    await fetch("http://witterbalances.ignorelist.com/getBalanceData").then(resp => buildValues(resp))  
 }
 
 async function buildValues(json) {
